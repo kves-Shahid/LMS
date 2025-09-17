@@ -15,7 +15,7 @@ const ReviewsList = ({ courseId }) => {
       }
     };
 
-    fetchReviews(); // Fetch reviews when the component mounts
+    fetchReviews();
   }, [courseId]);
 
   return (

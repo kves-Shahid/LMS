@@ -8,14 +8,13 @@ const Footer = () => {
       <style>{`
         .footer-container {
           margin-top: 1rem;
-          width: 100%;
         }
         .footer-social {
-          background-color: #66bb6a; /* Lighter Green */
+          background-color: #0d6efd;
           padding: 0.5rem 0;
         }
         .footer-main {
-          background-color: #283e51; /* Dark Blue/Green */
+          background-color: #1c2331;
           padding: 1.5rem 0;
         }
         .footer-copyright {
@@ -44,26 +43,11 @@ const Footer = () => {
         .footer-text-small {
           font-size: 0.9rem;
           margin-bottom: 0.5rem;
-          color: white;  /* Ensure text is readable */
         }
+        /* Remove any extra spacing at the bottom */
         footer {
           margin-bottom: 0 !important;
           padding-bottom: 0 !important;
-        }
-
-        .footer-text-small a {
-          color: #ffffff;
-          text-decoration: none;
-        }
-
-        .footer-text-small a:hover {
-          color: #a8d08d; /* Light Green Hover */
-        }
-
-        .container {
-          width: 100%;
-          padding-left: 15px;
-          padding-right: 15px;
         }
       `}</style>
 
@@ -92,32 +76,31 @@ const Footer = () => {
           </div>
         </section>
 
-        {/* Section: Links */}
+
         <section className="footer-main">
           <div className="container text-center text-md-start footer-content">
             <div className="row">
-              {/* Company Info */}
+
               <div className="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                <h6 className="text-uppercase fw-bold">VERV</h6>
+                <h6 className="text-uppercase fw-bold">LMS</h6>
                 <div className="footer-divider"></div>
                 <p className="footer-text-small">
-                  Verv is your premier destination for online learning. 
+                  LMS is your premier destination for online learning. 
                   Discover thousands of courses to advance your career and 
                   expand your knowledge.
                 </p>
               </div>
 
-              {/* Products */}
               <div className="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
                 <h6 className="text-uppercase fw-bold">Products</h6>
                 <div className="footer-divider"></div>
-                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">Verv Courses</a></p>
-                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">Verv Pro</a></p>
-                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">Verv Business</a></p>
-                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">Verv Teach</a></p>
+                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">LMS Courses</a></p>
+                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">LMS Pro</a></p>
+                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">LMS Business</a></p>
+                <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">LMS Teach</a></p>
               </div>
 
-              {/* Useful Links */}
+
               <div className="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
                 <h6 className="text-uppercase fw-bold">Useful Links</h6>
                 <div className="footer-divider"></div>
@@ -127,12 +110,12 @@ const Footer = () => {
                 <p className="footer-text-small"><a href="#!" className="text-white text-decoration-none">Help Center</a></p>
               </div>
 
-              {/* Contact */}
+
               <div className="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
                 <h6 className="text-uppercase fw-bold">Contact</h6>
                 <div className="footer-divider"></div>
-                <p className="footer-text-small"><i className="bi bi-house me-2"></i> New York, NY 10012, US</p>
-                <p className="footer-text-small"><i className="bi bi-envelope me-2"></i> info@verv.com</p>
+                <p className="footer-text-small"><i className="bi bi-house me-2"></i> Dhaka, Bangladesh</p>
+                <p className="footer-text-small"><i className="bi bi-envelope me-2"></i> info@LMS.com</p>
                 <p className="footer-text-small"><i className="bi bi-phone me-2"></i> + 01 234 567 88</p>
                 <p className="footer-text-small"><i className="bi bi-printer me-2"></i> + 01 234 567 89</p>
               </div>
@@ -140,11 +123,10 @@ const Footer = () => {
           </div>
         </section>
 
-        {/* Copyright - This is now the final element with no extra space below */}
         <div className="footer-copyright text-center p-2">
           <span className="footer-text-small">
             © {new Date().getFullYear()} Copyright: 
-            <a className="text-white ms-1 text-decoration-none" href="/">Verv.com</a>
+            <a className="text-white ms-1 text-decoration-none" href="/">LMS.com</a>
           </span>
         </div>
       </footer>

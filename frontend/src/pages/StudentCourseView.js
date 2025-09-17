@@ -9,8 +9,6 @@ import {
   submitAssignment,
   submitQuiz
 } from '../services/studentService';
-
-
 import FloatingChatButton from '../components/FloatingChatButton';
 
 const StudentCourseView = () => {
@@ -32,19 +30,15 @@ const StudentCourseView = () => {
       try {
         setLoading(true);
 
-       
         const courseData = await getCourseDetails(course_id);
         setCourse(courseData);
 
-        
         const modulesData = await getModulesByCourse(course_id);
         setModules(modulesData);
 
-        
         const assignmentsData = await getAssignmentsByCourse(course_id);
         setAssignments(assignmentsData);
 
-        
         const lessonsPromises = modulesData.map(async (module) => {
           try {
             const lessons = await getLessonsByModule(module.module_id);
@@ -82,7 +76,6 @@ const StudentCourseView = () => {
         });
         setModuleQuizzes(quizzesMap);
 
-      
         const initialUrls = {};
         const initialStatus = {};
         assignmentsData.forEach(assignment => {
@@ -131,7 +124,6 @@ const StudentCourseView = () => {
         return;
       }
 
-     
       await submitAssignment({
         assignment_id: assignmentId,
         student_id: parseInt(studentId),
@@ -183,11 +175,10 @@ const StudentCourseView = () => {
         return;
       }
 
-      // For demo purposes - in real app, you'd collect actual answers
       await submitQuiz({
         quiz_id: quizId,
         student_id: parseInt(studentId),
-        score: 0, // This would be calculated based on answers
+        score: 0,
         attempt_no: 1
       });
 
@@ -204,7 +195,6 @@ const StudentCourseView = () => {
       [assignmentId]: url
     }));
 
-    // Clear any previous error when user starts typing
     if (submissionStatus[assignmentId]?.error) {
       setSubmissionStatus(prev => ({
         ...prev,
@@ -214,116 +204,135 @@ const StudentCourseView = () => {
   };
 
   const handleReviewClick = () => {
-    // Navigate to the submit-review page using course_id
     navigate(`/courses/${course_id}/review`);
   };
 
   if (loading) {
     return (
-      <div className="container">
-        <div className="d-flex justify-content-center my-4">
-          <div className="spinner-border" role="status">
+      <div className="container py-5">
+        <div className="d-flex justify-content-center my-5">
+          <div className="spinner-border text-primary" style={{ width: '3rem', height: '3rem' }} role="status">
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
+        <p className="text-center text-muted">Loading course content...</p>
       </div>
     );
   }
 
   if (!course) {
     return (
-      <div className="container">
-        <div className="alert alert-danger my-4">Course not found or you don't have access to this course.</div>
+      <div className="container py-4">
+        <div className="alert alert-danger text-center my-4">
+          <i className="bi bi-exclamation-triangle me-2"></i>
+          Course not found or you don't have access to this course.
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
-      {/* Floating Review Button */}
-      <button 
-        className="btn btn-primary rounded-pill p-3"
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          right: '20px',
-          zIndex: 1000,
-          boxShadow: '0 4px 8px rgba(0,0,0,0.2)'
-        }}
-        onClick={handleReviewClick}
-        title="Submit a review for this course"
-      >
-        ✍️ Review
-      </button>
-
+    <div className="container py-4">
       {/* Floating Chat Button */}
       <FloatingChatButton course_id={course_id} />
 
       {/* Course Header */}
-      <div className="card mb-4">
+      <div className="card shadow-sm border-0 mb-4">
         <div className="card-body">
-          <h1 className="card-title">{course.title}</h1>
-          <p className="card-text">{course.description}</p>
+          <div className="d-flex justify-content-between align-items-start mb-3">
+            <div>
+              <h1 className="card-title fw-bold text-dark mb-2">{course.title}</h1>
+              <p className="card-text text-muted fs-5">{course.description}</p>
+            </div>
+            <button 
+              className="btn btn-primary d-flex align-items-center"
+              onClick={handleReviewClick}
+            >
+              <i className="bi bi-star me-2"></i>Write Review
+            </button>
+          </div>
+          
           <div className="d-flex gap-2 flex-wrap">
-            <span className="badge bg-primary">{course.category}</span>
-            <span className="badge bg-secondary">{course.language}</span>
-            <span className="badge bg-success">Enrolled</span>
-            {course.price > 0 && <span className="badge bg-warning">${course.price}</span>}
+            <span className="badge bg-primary">
+              <i className="bi bi-tag me-1"></i>{course.category}
+            </span>
+            <span className="badge bg-secondary">
+              <i className="bi bi-translate me-1"></i>{course.language}
+            </span>
+            <span className="badge bg-success">
+              <i className="bi bi-check-circle me-1"></i>Enrolled
+            </span>
+            {course.price > 0 && (
+              <span className="badge bg-warning">
+                <i className="bi bi-currency-dollar me-1"></i>${course.price}
+              </span>
+            )}
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <nav className="nav nav-tabs mb-4">
+      <nav className="nav nav-pills nav-fill mb-4">
         <button 
-          className={`nav-link ${activeTab === 'content' ? 'active' : ''}`}
+          className={`nav-link ${activeTab === 'content' ? 'active' : ''} d-flex align-items-center`}
           onClick={() => setActiveTab('content')}
         >
-          📚 Course Content
+          <i className="bi bi-journal-bookmark me-2"></i>
+          Course Content
         </button>
         <button 
-          className={`nav-link ${activeTab === 'assignments' ? 'active' : ''}`}
+          className={`nav-link ${activeTab === 'assignments' ? 'active' : ''} d-flex align-items-center`}
           onClick={() => setActiveTab('assignments')}
         >
-          📝 Assignments
+          <i className="bi bi-clipboard-check me-2"></i>
+          Assignments
         </button>
       </nav>
 
       {/* Course Content Tab */}
       {activeTab === 'content' && (
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-lg-3">
             {/* Module Navigation */}
-            <div className="card">
-              <div className="card-header">
-                <h5>Course Modules</h5>
+            <div className="card shadow-sm border-0 mb-4">
+              <div className="card-header bg-light">
+                <h5 className="card-title mb-0 fw-semibold">
+                  <i className="bi bi-list-check me-2"></i>
+                  Course Modules
+                </h5>
               </div>
               <div className="list-group list-group-flush">
                 {modules.map((module) => (
                   <button
                     key={module.module_id}
-                    className={`list-group-item list-group-item-action ${selectedModule?.module_id === module.module_id ? 'active' : ''}`}
+                    className={`list-group-item list-group-item-action d-flex justify-content-between align-items-start ${
+                      selectedModule?.module_id === module.module_id ? 'active' : ''
+                    }`}
                     onClick={() => setSelectedModule(module)}
                   >
-                    <strong>{module.position}.</strong> {module.title}
-                    <br />
-                    <small className="text-muted">
-                      {moduleLessons[module.module_id]?.length || 0} lessons •{' '}
-                      {moduleQuizzes[module.module_id]?.length || 0} quizzes
-                    </small>
+                    <div className="ms-2 me-auto">
+                      <div className="fw-semibold">
+                        {module.position}. {module.title}
+                      </div>
+                      <small className="text-muted">
+                        {moduleLessons[module.module_id]?.length || 0} lessons •{' '}
+                        {moduleQuizzes[module.module_id]?.length || 0} quizzes
+                      </small>
+                    </div>
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          <div className="col-md-9">
+          <div className="col-lg-9">
             {/* Module Content */}
             {selectedModule ? (
-              <div className="card">
+              <div className="card shadow-sm border-0">
                 <div className="card-header bg-light">
-                  <h4 className="mb-0">
-                    <strong>{selectedModule.position}.</strong> {selectedModule.title}
+                  <h4 className="mb-0 fw-semibold">
+                    <span className="badge bg-primary me-2">{selectedModule.position}</span>
+                    {selectedModule.title}
                   </h4>
                   <p className="mb-0 text-muted">{selectedModule.description}</p>
                 </div>
@@ -331,44 +340,48 @@ const StudentCourseView = () => {
                   {/* Lessons */}
                   {moduleLessons[selectedModule.module_id] && moduleLessons[selectedModule.module_id].length > 0 && (
                     <div className="mb-4">
-                      <h5>📖 Lessons</h5>
-                      <div className="list-group">
+                      <h5 className="fw-semibold text-primary mb-3">
+                        <i className="bi bi-book me-2"></i>
+                        Lessons
+                      </h5>
+                      <div className="row">
                         {moduleLessons[selectedModule.module_id].map((lesson) => (
-                          <div key={lesson.lesson_id} className="list-group-item">
-                            <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <h6 className="mb-1">
-                                  <strong>{lesson.position}.</strong> {lesson.title}
+                          <div key={lesson.lesson_id} className="col-md-6 mb-3">
+                            <div className="card border-0 shadow-sm h-100">
+                              <div className="card-body">
+                                <h6 className="card-title fw-semibold">
+                                  <span className="badge bg-secondary me-2">{lesson.position}</span>
+                                  {lesson.title}
                                 </h6>
                                 {lesson.description && (
-                                  <p className="mb-1 text-muted">{lesson.description}</p>
+                                  <p className="card-text text-muted small">{lesson.description}</p>
+                                )}
+                                
+                                {lesson.video_url && (
+                                  <div className="mt-3">
+                                    <div className="ratio ratio-16x9">
+                                      <video controls className="w-100 rounded">
+                                        <source src={lesson.video_url} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                      </video>
+                                    </div>
+                                  </div>
+                                )}
+                                
+                                {lesson.resource && (
+                                  <div className="mt-3">
+                                    <a 
+                                      href={lesson.resource} 
+                                      target="_blank" 
+                                      rel="noopener noreferrer" 
+                                      className="btn btn-outline-primary btn-sm"
+                                    >
+                                      <i className="bi bi-download me-1"></i>Download Resource
+                                    </a>
+                                  </div>
                                 )}
                               </div>
                             </div>
-                            
-                            {lesson.video_url && (
-                              <div className="mt-3">
-                                <div className="ratio ratio-16x9">
-                                  <video controls className="w-100 rounded">
-                                    <source src={lesson.video_url} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                  </video>
-                                </div>
-                              </div>
-                            )}
-                            
-                            {lesson.resource && (
-                              <div className="mt-2">
-                                <a 
-                                  href={lesson.resource} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer" 
-                                  className="btn btn-sm btn-outline-primary"
-                                >
-                                  📄 Download Resource
-                                </a>
-                              </div>
-                            )}
                           </div>
                         ))}
                       </div>
@@ -378,23 +391,27 @@ const StudentCourseView = () => {
                   {/* Quizzes */}
                   {moduleQuizzes[selectedModule.module_id] && moduleQuizzes[selectedModule.module_id].length > 0 && (
                     <div>
-                      <h5>🧠 Quizzes</h5>
-                      <div className="list-group">
+                      <h5 className="fw-semibold text-info mb-3">
+                        <i className="bi bi-question-circle me-2"></i>
+                        Quizzes
+                      </h5>
+                      <div className="row">
                         {moduleQuizzes[selectedModule.module_id].map((quiz) => (
-                          <div key={quiz.quiz_id} className="list-group-item">
-                            <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <h6 className="mb-1">{quiz.title}</h6>
-                                <p className="mb-1 text-muted">
-                                  📊 Total Marks: {quiz.total_marks} | ⏰ Time Limit: {quiz.time_limit} minutes
-                                </p>
+                          <div key={quiz.quiz_id} className="col-md-6 mb-3">
+                            <div className="card border-0 shadow-sm h-100">
+                              <div className="card-body">
+                                <h6 className="card-title fw-semibold">{quiz.title}</h6>
+                                <div className="d-flex justify-content-between text-muted small mb-3">
+                                  <span><i className="bi bi-star me-1"></i>{quiz.total_marks} marks</span>
+                                  <span><i className="bi bi-clock me-1"></i>{quiz.time_limit} mins</span>
+                                </div>
+                                <button 
+                                  className="btn btn-primary btn-sm w-100"
+                                  onClick={() => handleQuizSubmit(quiz.quiz_id)}
+                                >
+                                  <i className="bi bi-play-circle me-1"></i>Take Quiz
+                                </button>
                               </div>
-                              <button 
-                                className="btn btn-primary btn-sm"
-                                onClick={() => handleQuizSubmit(quiz.quiz_id)}
-                              >
-                                Take Quiz
-                              </button>
                             </div>
                           </div>
                         ))}
@@ -403,15 +420,19 @@ const StudentCourseView = () => {
                   )}
 
                   {(!moduleLessons[selectedModule.module_id]?.length && !moduleQuizzes[selectedModule.module_id]?.length) && (
-                    <div className="alert alert-info">
-                      No content available for this module yet.
+                    <div className="text-center py-5 text-muted">
+                      <i className="bi bi-inbox display-4 d-block mb-3"></i>
+                      <h5>No content available</h5>
+                      <p>This module doesn't have any content yet.</p>
                     </div>
                   )}
                 </div>
               </div>
             ) : (
-              <div className="alert alert-info">
-                👈 Select a module from the sidebar to view its content.
+              <div className="card shadow-sm border-0 text-center py-5">
+                <i className="bi bi-journal-text display-4 text-muted mb-3"></i>
+                <h5 className="text-muted">Select a Module</h5>
+                <p className="text-muted">Choose a module from the sidebar to view its content</p>
               </div>
             )}
           </div>
@@ -420,14 +441,19 @@ const StudentCourseView = () => {
 
       {/* Assignments Tab */}
       {activeTab === 'assignments' && (
-        <div className="card">
-          <div className="card-header">
-            <h4>📝 Course Assignments</h4>
+        <div className="card shadow-sm border-0">
+          <div className="card-header bg-light">
+            <h4 className="card-title mb-0 fw-semibold">
+              <i className="bi bi-clipboard-check me-2"></i>
+              Course Assignments ({assignments.length})
+            </h4>
           </div>
           <div className="card-body">
             {assignments.length === 0 ? (
-              <div className="alert alert-info">
-                No assignments available for this course yet.
+              <div className="text-center py-5 text-muted">
+                <i className="bi bi-inbox display-4 d-block mb-3"></i>
+                <h5>No assignments available</h5>
+                <p>This course doesn't have any assignments yet.</p>
               </div>
             ) : (
               <div className="row">
@@ -435,28 +461,34 @@ const StudentCourseView = () => {
                   const status = submissionStatus[assignment.assignment_id] || { loading: false, error: null, success: false };
                   
                   return (
-                    <div key={assignment.assignment_id} className="col-md-6 mb-4">
-                      <div className="card h-100">
-                        <div className="card-header">
-                          <h5 className="card-title mb-0">{assignment.title}</h5>
+                    <div key={assignment.assignment_id} className="col-lg-6 col-xl-4 mb-4">
+                      <div className="card border-0 shadow-sm h-100">
+                        <div className="card-header bg-info text-white">
+                          <h6 className="card-title mb-0 fw-semibold">{assignment.title}</h6>
                         </div>
-                        <div className="card-body">
-                          <p className="card-text">{assignment.description}</p>
+                        <div className="card-body d-flex flex-column">
+                          <p className="card-text text-muted flex-grow-1">{assignment.description}</p>
                           
                           <div className="mb-3">
-                            <strong>📅 Due Date:</strong>{' '}
-                            {new Date(assignment.due_date).toLocaleDateString()}
-                            <br />
-                            <strong>🏆 Max Score:</strong> {assignment.max_score || 'N/A'}
+                            <div className="d-flex justify-content-between text-muted small">
+                              <span>
+                                <i className="bi bi-calendar me-1"></i>
+                                {new Date(assignment.due_date).toLocaleDateString()}
+                              </span>
+                              <span>
+                                <i className="bi bi-trophy me-1"></i>
+                                {assignment.max_score || 'N/A'} points
+                              </span>
+                            </div>
                           </div>
                           
                           <div className="mb-3">
-                            <label htmlFor={`assignment-${assignment.assignment_id}`} className="form-label">
+                            <label htmlFor={`assignment-${assignment.assignment_id}`} className="form-label fw-semibold small">
                               Submission URL:
                             </label>
                             <input 
                               type="url" 
-                              className="form-control"
+                              className="form-control form-control-sm"
                               id={`assignment-${assignment.assignment_id}`}
                               placeholder="https://your-submission-link.com"
                               value={submissionUrls[assignment.assignment_id] || ''}
@@ -467,30 +499,31 @@ const StudentCourseView = () => {
                           
                           {/* Status messages */}
                           {status.error && (
-                            <div className="alert alert-danger mb-3 py-2">
-                              <small>{status.error}</small>
+                            <div className="alert alert-danger py-2 mb-3">
+                              <small><i className="bi bi-exclamation-triangle me-1"></i>{status.error}</small>
                             </div>
                           )}
                           
                           {status.success && (
-                            <div className="alert alert-success mb-3 py-2">
-                              <small>✅ Assignment submitted successfully!</small>
+                            <div className="alert alert-success py-2 mb-3">
+                              <small><i className="bi bi-check-circle me-1"></i>Assignment submitted successfully!</small>
                             </div>
                           )}
                           
-
                           <button 
-                            className="btn btn-success w-100"
+                            className="btn btn-primary btn-sm mt-auto"
                             onClick={() => handleAssignmentSubmit(assignment.assignment_id)}
                             disabled={status.loading}
                           >
                             {status.loading ? (
                               <>
-                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm me-2" role="status"></span>
                                 Submitting...
                               </>
                             ) : (
-                              '📤 Submit Assignment'
+                              <>
+                                <i className="bi bi-send me-1"></i>Submit Assignment
+                              </>
                             )}
                           </button>
                         </div>
