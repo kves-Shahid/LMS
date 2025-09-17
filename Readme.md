@@ -114,7 +114,7 @@ useEffect(() => {
 git init
 
 # Add remote repository (only once)
-git remote add origin https://github.com/kves-Shahid/SQL.git
+git remote add origin https://github.com/kves-Shahid/LMS.git
 
 # Add all files and commit
 git add .
